@@ -10,9 +10,62 @@
   <div class="form-container">
     <h2>AI Crop Diagnosis</h2>
     <form>
-      <input type="file" accept="image/*">
-      <button type="submit" class="btn">Analyze</button>
-    </form>
+  <div class="upload-box" id="uploadBox">
+    <p id="uploadText">📷 Drag & Drop your crop image here<br>or</p>
+    <label for="fileInput" class="upload-btn">Choose File</label>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <img id="previewImage" src="" alt="Preview" style="display:none;">
   </div>
+  <button type="submit" class="btn">Analyze</button>
+</form>
+
+
+  </div>
+  <script>
+  const uploadBox = document.getElementById("uploadBox");
+  const fileInput = document.getElementById("fileInput");
+  const previewImage = document.getElementById("previewImage");
+  const uploadText = document.getElementById("uploadText");
+
+  // Highlight on drag
+  uploadBox.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadBox.style.background = "rgba(200,255,200,0.9)";
+    uploadBox.style.borderColor = "#43a047";
+  });
+
+  uploadBox.addEventListener("dragleave", () => {
+    uploadBox.style.background = "rgba(255,255,255,0.7)";
+    uploadBox.style.borderColor = "var(--primary)";
+  });
+
+  uploadBox.addEventListener("drop", (e) => {
+    e.preventDefault();
+    fileInput.files = e.dataTransfer.files;
+    showPreview(fileInput.files[0]);
+  });
+
+  // Click to choose
+  uploadBox.addEventListener("click", () => fileInput.click());
+
+  // File input change
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      showPreview(fileInput.files[0]);
+    }
+  });
+
+  // Function to preview image
+  function showPreview(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      previewImage.src = e.target.result;
+      previewImage.style.display = "block";
+      uploadText.style.display = "none"; // Hide text once preview is shown
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
+
 </body>
 </html>
